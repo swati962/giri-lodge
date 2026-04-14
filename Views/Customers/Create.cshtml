@@ -1,0 +1,107 @@
+@model HotelManagement.Models.CustomerCreateViewModel
+
+@{
+    ViewData["Title"] = "Add New Customer";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-plus"></i> Add New Customer</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter full name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" placeholder="Enter phone number" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="IdProofFile" class="form-label"></label>
+                            <input asp-for="IdProofFile" class="form-control" type="file" accept="image/*,.pdf" id="idProofInput" />
+                            <div class="form-text">Accepted formats: Images (JPG, PNG, etc.) or PDF. Max size: 5MB</div>
+                            <span asp-validation-for="IdProofFile" class="text-danger"></span>
+                            <div id="filePreview" class="mt-2" style="display: none;">
+                                <img id="imagePreview" src="" alt="Preview" class="img-thumbnail" style="max-height: 200px; display: none;" />
+                                <div id="pdfPreview" class="alert alert-info" style="display: none;">
+                                    <i class="bi bi-file-earmark-pdf"></i> <span id="fileName"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CheckInDate" class="form-label"></label>
+                                <input asp-for="CheckInDate" class="form-control" type="date" />
+                                <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CheckOutDate" class="form-label"></label>
+                                <input asp-for="CheckOutDate" class="form-control" type="date" />
+                                <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Save Customer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('idProofInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const filePreview = document.getElementById('filePreview');
+            const imagePreview = document.getElementById('imagePreview');
+            const pdfPreview = document.getElementById('pdfPreview');
+            const fileName = document.getElementById('fileName');
+            
+            if (file) {
+                filePreview.style.display = 'block';
+                
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                        pdfPreview.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                } else if (file.type === 'application/pdf') {
+                    imagePreview.style.display = 'none';
+                    pdfPreview.style.display = 'block';
+                    fileName.textContent = file.name;
+                }
+            } else {
+                filePreview.style.display = 'none';
+            }
+        });
+    </script>
+}

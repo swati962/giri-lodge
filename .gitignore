@@ -1,0 +1,32 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Sensitive configuration - use user secrets or environment variables
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
