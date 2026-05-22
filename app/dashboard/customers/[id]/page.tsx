@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowLeft, Edit, Phone, Mail, CreditCard, MapPin, Calendar } from 'lucide-react';
 
 export default async function CustomerDetailPage({
@@ -120,9 +119,9 @@ export default async function CustomerDetailPage({
           </div>
 
           {/* Aadhar Photo */}
-          {customer.aadhar_photo_url && (
-            <div>
-              <p className="text-sm text-gray-500 mb-3">Aadhar Card Photo</p>
+          <div>
+            <p className="text-sm text-gray-500 mb-3">Aadhar Card Photo</p>
+            {customer.aadhar_photo_url ? (
               <div className="border border-gray-200 rounded-lg overflow-hidden inline-block">
                 <img
                   src={customer.aadhar_photo_url}
@@ -130,8 +129,12 @@ export default async function CustomerDetailPage({
                   className="max-w-full max-h-64 object-contain"
                 />
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-400">
+                No photo uploaded
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Plus, Search, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Eye, Edit } from 'lucide-react';
 import { Customer } from '@/lib/types';
 import CustomerSearch from './CustomerSearch';
 import DeleteCustomerButton from './DeleteCustomerButton';
@@ -10,45 +10,24 @@ export default async function CustomersPage({
 }: {
   searchParams: { q?: string };
 }) {
-  let customers: Customer[] = [];
-  let error: string | null = null;
+  const supabase = createClient();
+  const searchQuery = searchParams.q || '';
 
-  try {
-    const supabase = createClient();
-    const searchQuery = searchParams.q || '';
+  let query = supabase
+    .from('customers')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-    let query = supabase
-      .from('customers')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (searchQuery) {
-      query = query.or(
-        `full_name.ilike.%${searchQuery}%,phone.ilike.%${searchQuery}%,aadhar_number.ilike.%${searchQuery}%`
-      );
-    }
-
-    const { data, error: dbError } = await query;
-    
-    if (dbError) {
-      console.error('Database error:', dbError);
-      error = dbError.message;
-    } else {
-      customers = data || [];
-    }
-  } catch (err: any) {
-    console.error('Server error:', err);
-    error = err.message || 'Failed to load customers';
+  if (searchQuery) {
+    query = query.or(
+      `full_name.ilike.%${searchQuery}%,phone.ilike.%${searchQuery}%,aadhar_number.ilike.%${searchQuery}%`
+    );
   }
+
+  const { data: customers } = await query;
 
   return (
     <div className="space-y-6">
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-          Error: {error}
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <CustomerSearch initialQuery={searchParams.q || ''} />
@@ -75,7 +54,7 @@ export default async function CustomersPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {customers.length > 0 ? (
+              {customers && customers.length > 0 ? (
                 customers.map((customer: Customer) => (
                   <tr key={customer.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
