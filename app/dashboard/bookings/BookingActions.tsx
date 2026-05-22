@@ -16,14 +16,16 @@ export default function BookingActions({
   const [isCancelling, setIsCancelling] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [totalAmount, setTotalAmount] = useState(estimatedTotal);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
+    setError('');
     const result = await checkOutBooking(bookingId, totalAmount);
 
     if (result.error) {
-      alert(result.error);
+      setError(result.error);
       setIsCheckingOut(false);
     } else {
       router.refresh();
@@ -34,10 +36,11 @@ export default function BookingActions({
     if (!confirm('Are you sure you want to cancel this booking?')) return;
 
     setIsCancelling(true);
+    setError('');
     const result = await cancelBooking(bookingId);
 
     if (result.error) {
-      alert(result.error);
+      setError(result.error);
       setIsCancelling(false);
     } else {
       router.refresh();
@@ -46,7 +49,9 @@ export default function BookingActions({
 
   if (showCheckout) {
     return (
-      <div className="flex items-center gap-2 justify-end">
+      <div className="space-y-2">
+        {error && <p className="text-red-600 text-sm">{error}</p>}
+        <div className="flex items-center gap-2 justify-end">
         <input
           type="number"
           value={totalAmount}
@@ -67,12 +72,15 @@ export default function BookingActions({
         >
           Cancel
         </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-2 justify-end">
+    <div className="space-y-2">
+      {error && <p className="text-red-600 text-sm">{error}</p>}
+      <div className="flex items-center gap-2 justify-end">
       <button
         onClick={() => setShowCheckout(true)}
         className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition"
@@ -92,6 +100,7 @@ export default function BookingActions({
         )}
         Cancel
       </button>
+      </div>
     </div>
   );
 }

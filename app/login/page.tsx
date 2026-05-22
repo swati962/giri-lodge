@@ -41,7 +41,6 @@ export default function LoginPage() {
         console.log('Login response:', { data, error });
         if (error) throw error;
         if (data.session) {
-          alert('Login successful! Redirecting...');
           // Force hard redirect to ensure middleware picks up the session
           window.location.href = '/dashboard';
           return; // Stop execution here
