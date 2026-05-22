@@ -55,7 +55,7 @@ export default function NewCustomerPage() {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Add New Customer</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
           {/* Full Name - Required */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

@@ -91,7 +91,7 @@ export default function EditCustomerPage({ params }: { params: { id: string } })
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Edit Customer</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
           <input type="hidden" name="existing_photo_url" value={customer.aadhar_photo_url || ''} />
           
           {/* Full Name */}
