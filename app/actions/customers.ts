@@ -22,12 +22,23 @@ export async function createCustomer(formData: FormData) {
 
     // Upload Aadhar photo if provided
     if (aadhar_photo && aadhar_photo.size > 0) {
+      console.log('Photo detected:', aadhar_photo.name, 'Size:', aadhar_photo.size, 'Type:', aadhar_photo.type);
+      
       const fileExt = aadhar_photo.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       
+      // Convert File to ArrayBuffer for upload
+      const arrayBuffer = await aadhar_photo.arrayBuffer();
+      const buffer = new Uint8Array(arrayBuffer);
+      
+      console.log('Uploading to bucket aadhar-photos, file:', fileName);
+      
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('aadhar-photos')
-        .upload(fileName, aadhar_photo);
+        .upload(fileName, buffer, {
+          contentType: aadhar_photo.type,
+          upsert: false
+        });
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
