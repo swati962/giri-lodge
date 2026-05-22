@@ -20,8 +20,7 @@ export async function createCustomer(formData: FormData) {
 
     let aadhar_photo_url: string | null = null;
 
-    // Skip photo upload for now to test basic insert
-    /*
+    // Upload Aadhar photo if provided
     if (aadhar_photo && aadhar_photo.size > 0) {
       const fileExt = aadhar_photo.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -31,6 +30,7 @@ export async function createCustomer(formData: FormData) {
         .upload(fileName, aadhar_photo);
 
       if (uploadError) {
+        console.error('Upload error:', uploadError);
         return { error: 'Failed to upload Aadhar photo: ' + uploadError.message };
       }
 
@@ -39,8 +39,8 @@ export async function createCustomer(formData: FormData) {
         .getPublicUrl(fileName);
       
       aadhar_photo_url = publicUrl;
+      console.log('Photo uploaded:', aadhar_photo_url);
     }
-    */
 
     console.log('Inserting into database...');
     
