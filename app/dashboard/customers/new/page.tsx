@@ -116,6 +116,15 @@ export default function NewCustomerPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Aadhar Card Photo
             </label>
+            {/* Hidden file input - always in DOM */}
+            <input
+              type="file"
+              name="aadhar_photo"
+              id="aadhar_photo_input"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="hidden"
+            />
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               {photoPreview ? (
                 <div className="relative inline-block">
@@ -128,7 +137,7 @@ export default function NewCustomerPage() {
                     type="button"
                     onClick={() => {
                       setPhotoPreview(null);
-                      const input = document.querySelector('input[name="aadhar_photo"]') as HTMLInputElement;
+                      const input = document.getElementById('aadhar_photo_input') as HTMLInputElement;
                       if (input) input.value = '';
                     }}
                     className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
@@ -137,19 +146,12 @@ export default function NewCustomerPage() {
                   </button>
                 </div>
               ) : (
-                <label className="cursor-pointer">
+                <label htmlFor="aadhar_photo_input" className="cursor-pointer">
                   <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                   <span className="text-gray-600">Click to upload Aadhar photo</span>
                   <span className="block text-sm text-gray-400 mt-1">
                     PNG, JPG up to 5MB
                   </span>
-                  <input
-                    type="file"
-                    name="aadhar_photo"
-                    accept="image/*"
-                    onChange={handlePhotoChange}
-                    className="hidden"
-                  />
                 </label>
               )}
             </div>
